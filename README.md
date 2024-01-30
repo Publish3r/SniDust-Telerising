@@ -1,19 +1,20 @@
 # SniDust-Telerising
 SmartDNS Proxy for Telerising
 
-## Prerequisites
+## Requirements
 
-* VPS or a Root Server Switzerland with a clean public IP.
-* You will need to install [Docker](https://www.docker.com/) (or Docker is already installed).
-* [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-)
+* VPS or a Root Server Switzerland with a clean public CH IP.
+* You will need to install [Docker](https://www.docker.com/).
+* [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-).
 
 ##  Usage
 
 ### Get your Public IP (Client)
 
 ```
-## run this in your terminal or use your webbrowser
-curl https://ifconfig.me
+## run this in your terminal or use your webbrowser 
+curl -4 https://icanhazip.com
+
 ```
 For this **example**  lets assume your public ip (of your *client*) is `10.111.123.7`
 You can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
@@ -21,14 +22,14 @@ You can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSD
 ### Get your IP of your Server
 
 ```
-curl https://ifconfig.me
+curl -4 https://icanhazip.com
 ```
 For this **example** lets assume your public ip (of your *server*) is `10.111.123.8`
 
 ### Run SniDust-Telerising on your Server
 
 ```
-docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp ghcr.io/publish3r/snidust-telerising:main
+docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp --restart=always ghcr.io/publish3r/snidust-telerising:main
 ```
 
 Or if you use docker compose:
@@ -127,7 +128,7 @@ Create a file with the name `99-custom.lst`. Insert all your custom domains in t
 #### Mount it
 
 ```bash
-docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro ghcr.io/publish3r/snidust-telerising:main
+docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro --restart=always ghcr.io/publish3r/snidust-telerising:main
 ```
 
 Or if you use docker-compose:
