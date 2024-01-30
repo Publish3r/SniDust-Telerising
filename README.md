@@ -1,11 +1,10 @@
 # SniDust-Telerising
 SmartDNS Proxy for Telerising
 
-## Requirements
+## Prerequisites
 
 * VPS or a Root Server Switzerland with a clean public CH IP.
 * You will need to install [Docker](https://www.docker.com/).
-* [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-).
 
 ##  Usage
 
@@ -218,6 +217,10 @@ You should see in the logs (`docker logs snidust`) snidust has reloaded your dom
 [SniDust] *** End of Domain List ***
 [SniDust] Domain Lists reloaded!
 ```
+
+## Requirements
+
+* [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-).
 
 ## Credits
 Forked from:
