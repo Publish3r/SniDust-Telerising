@@ -3,7 +3,9 @@ SmartDNS Proxy for Telerising
 
 ## Prerequisites
 
-You will need a VPS or a Root Server with a clean public CH IP where you can install [Docker](https://www.docker.com/) (or Docker is already installed).
+* VPS or a Root Server Switzerland with a clean public IP.
+* You will need to install [Docker](https://www.docker.com/) (or Docker is already installed).
+* [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-)
 
 ##  Usage
 
