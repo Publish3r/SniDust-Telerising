@@ -1,20 +1,9 @@
-[![Docker](https://github.com/Seji64/SniDust/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/Seji64/SniDust/actions/workflows/docker-publish.yml)
-
-# SniDust
-SmartDNS Proxy to hide your GeoLocation. Based on DnsDist and SniProxy
-
-## Supported Services
-
-- Zattoo
-- Yallo.tv
-- Netflix
-- Hulu
-- Amazon Prime
-- SRF.ch (live tv)
+# SniDust-Telerising
+SmartDNS Proxy for Telerising
 
 ## Prerequisites
 
-You will need a VPS or a Root Server where you can install [Docker](https://www.docker.com/) (or Docker is already installed).
+You will need a VPS or a Root Server with a clean public CH IP where you can install [Docker](https://www.docker.com/) (or Docker is already installed).
 
 ##  Usage
 
@@ -25,7 +14,7 @@ You will need a VPS or a Root Server where you can install [Docker](https://www.
 curl https://ifconfig.me
 ```
 For this **example**  lets assume your public ip (of your *client*) is `10.111.123.7`
-Since version `v1.0.8` you can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
+You can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
 
 ### Get your IP of your Server
 
@@ -34,10 +23,10 @@ curl https://ifconfig.me
 ```
 For this **example** lets assume your public ip (of your *server*) is `10.111.123.8`
 
-### Run SniDust on your Server
+### Run SniDust-Telerising on your Server
 
 ```
-docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp ghcr.io/seji64/snidust:main
+docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp ghcr.io/publish3r/snidust-telerising:main
 ```
 
 Or if you use docker compose:
@@ -55,7 +44,7 @@ services:
             - 443:443
             - 80:80
             - 53:5300/udp
-        image: 'ghcr.io/seji64/snidust:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:main'
 ```
 
 ### Check logs of the container
@@ -136,7 +125,7 @@ Create a file with the name `99-custom.lst`. Insert all your custom domains in t
 #### Mount it
 
 ```bash
-docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro ghcr.io/seji64/snidust:main
+docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro ghcr.io/publish3r/snidust-telerising:main
 ```
 
 Or if you use docker-compose:
@@ -155,7 +144,7 @@ services:
             - '53:5300/udp'
         volumes:
             - '~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro'
-        image: 'ghcr.io/seji64/snidust:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:main'
 ```
 
 ### Spoof all domains
@@ -193,7 +182,7 @@ services:
             - '53:5300/udp'
         volumes:
             - '~/myacls.acl:/tmp/myacls.acl:ro'
-        image: 'ghcr.io/seji64/snidust:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:main'
 ```
 
 Then you can reload your ACLs by querying a specific DNS name:
@@ -229,6 +218,9 @@ You should see in the logs (`docker logs snidust`) snidust has reloaded your dom
 ```
 
 ## Credits
+Forked from:
+- https://github.com/Seji64/SniDust
+
 Based on the following projects:
 
 - https://dnsdist.org/
