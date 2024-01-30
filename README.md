@@ -14,7 +14,6 @@ SmartDNS Proxy for Telerising
 ```
 ## run this in your terminal or use your webbrowser 
 curl -4 https://icanhazip.com
-
 ```
 For this **example**  lets assume your public ip (of your *client*) is `10.111.123.7`
 You can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
