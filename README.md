@@ -11,23 +11,24 @@ SmartDNS Proxy for Telerising
 ### Get your Public IP (Client)
 
 ```
-## run this in your terminal or use your webbrowser 
-curl -4 https://icanhazip.com
+## run this in your terminal or use your webbrowser
+curl https://ifconfig.co
 ```
 For this **example**  lets assume your public ip (of your *client*) is `10.111.123.7`
-You can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
+Since version `v1.0.8` you can also use DynDNS. In this case just use your DynDNS domain eg. `myDynDNSDomain.no-ip.com`
 
 ### Get your IP of your Server
 
 ```
-curl -4 https://icanhazip.com
+curl https://ifconfig.co
 ```
 For this **example** lets assume your public ip (of your *server*) is `10.111.123.8`
 
-### Run SniDust-Telerising on your Server
+### Run SniDust on your Server
 
 ```
-docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp --restart=always ghcr.io/publish3r/snidust-telerising:main
+docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp --restart=always ghcr.io/publish3r/snidust-telerising:main
+
 ```
 
 Or if you use docker compose:
@@ -38,12 +39,14 @@ services:
     snidust:
         container_name: snidust
         environment:
-            - ALLOWED_CLIENTS=127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com
-            - EXTERNAL_IP=10.111.123.8
+            - TZ=Europe/Berlin
+            - 'ALLOWED_CLIENTS=127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com'
+            - 'EXTERNAL_IP=10.111.123.8'
             - SPOOF_ALL_DOMAINS=false # Set to true (case sensitive!) if you want to spoof ALL domains.
+            # - 'DNYDNS_CRON_SCHEDULE=*/1 * * * *' # Example for specifing a custom cron interval for dynDNS Update. Default is '*/15 * * * *'
         ports:
-            - 443:443
-            - 80:80
+            - 443:8443
+            - 80:8080
             - 53:5300/udp
         image: 'ghcr.io/publish3r/snidust-telerising:main'
 ```
@@ -81,6 +84,10 @@ In case Systemd is already using port 53 you can follow this [Guide](https://www
 
 ## Advanced setups
 
+### Disable installtion of repo default domains
+
+If do not want use the default domain lists of this repo, you can disable this by setting the environment variable `INSTALL_DEFAULT_DOMAINS` to `false`.
+
 ### Configure DNS Rate Limiting
 The default is the following:
 ```
@@ -106,8 +113,8 @@ To use your own/custom upstream DNS Server you have to do the following:
 - Use the [DNSDist Documentation](https://dnsdist.org/reference/config.html#newServer) to create you own upstream pool.
   Example:
   ```
-  newServer("192.0.2.1", name="custom1", pool="customUpstream")
-  newServer("192.0.2.2", name="custom2", pool="customUpstream")
+  newServer({address="192.0.2.1", name="custom1", pool="customUpstream"})
+  newServer({address="192.0.2.2", name="custom2", pool="customUpstream"})
   ```
  - Ensure you have set a `pool` and it is **NOT** named `upstream` (this name is already used by sniDust itself)
  - Set Environment Variable `DNSDIST_UPSTREAM_POOL_NAME` to your pool name *(here: `customUpstream`)*
@@ -126,7 +133,8 @@ Create a file with the name `99-custom.lst`. Insert all your custom domains in t
 #### Mount it
 
 ```bash
-docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:443 -p 80:80 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro --restart=always ghcr.io/publish3r/snidust-telerising:main
+docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro --restart=always ghcr.io/publish3r/snidust-telerising:main
+
 ```
 
 Or if you use docker-compose:
@@ -140,8 +148,8 @@ services:
             - 'ALLOWED_CLIENTS=127.0.0.1, 10.111.123.7'
             - EXTERNAL_IP=10.111.123.8
         ports:
-            - '443:443'
-            - '80:80'
+            - '443:8443'
+            - '80:8080'
             - '53:5300/udp'
         volumes:
             - '~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro'
@@ -178,8 +186,8 @@ services:
             - 'ALLOWED_CLIENTS_FILE=/tmp/myacls.acl'
             - EXTERNAL_IP=10.111.123.8
         ports:
-            - '443:443'
-            - '80:80'
+            - '443:8443'
+            - '80:8080'
             - '53:5300/udp'
         volumes:
             - '~/myacls.acl:/tmp/myacls.acl:ro'
@@ -229,7 +237,7 @@ Forked from:
 Based on the following projects:
 
 - https://dnsdist.org/
-- https://github.com/mosajjal/sniproxy/
+- https://www.nginx.com
 - https://github.com/andykimpe/wilmaa-proxy
 - https://github.com/suuhm/unblock-proxy.sh
 - https://github.com/ab77/netflix-proxy

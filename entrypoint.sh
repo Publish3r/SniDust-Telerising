@@ -22,35 +22,39 @@ then
   echo "[INFO] Generated WebServer API Key: $DNSDIST_WEBSERVER_API_KEY"
 fi
 
+if [ "$INSTALL_DEFAULT_DOMAINS" = true ];
+then
+  echo "[INFO] Installing default domains..."
+  cp -v /var/lib/snidust/domains.d/*.lst /etc/snidust/domains.d/
+fi
+
 echo "[INFO] Generating ACL..."
 set +e
 source generateACL.sh
 set -e
 
 
-echo "[INFO] Generating DNSDist Configs..."
+echo "[INFO] Generating DNSDist Config..."
 /bin/bash /etc/dnsdist/dnsdist.conf.template > /etc/dnsdist/dnsdist.conf
 
 if [ "$DYNDNS_CRON_ENABLED" = true ];
 then
   echo "[INFO] DynDNS Address in ALLOWED_CLIENTS detected => Enable cron job"
-  echo "$DNYDNS_CRON_SCHEDULE /bin/bash /dynDNSCron.sh" > /etc/crontabs/snidust
-  crond -f &
+  echo "$DNYDNS_CRON_SCHEDULE /bin/bash /dynDNSCron.sh" > /etc/snidust/dyndns.cron
+  supercronic /etc/snidust/dyndns.cron &
 fi
 
 echo "[INFO] Starting DNSDist..."
 /usr/bin/dnsdist -C /etc/dnsdist/dnsdist.conf --supervised --disable-syslog --uid snidust --gid snidust &
 
-echo "[INFO] Starting sniproxy"
-(until /usr/local/bin/sniproxy --config "/etc/sniproxy/config.yaml"; do
-    if [ -f "/tmp/reload_sni_proxy" ];
-    then
-      # ignore => restarted by cron
-      rm -f /tmp/reload_sni_proxy
-    else
-      echo "[WARN] sniproxy crashed with exit code $?. Restarting..." >&2
-    fi
-    sleep 1
-done) &
-echo "[INFO] Using $EXTERNAL_IP - Point your DNS settings to this address"
-wait -n
+
+echo "[INFO] Starting nginx.."
+nginx
+nginx_processId=$!
+
+sleep 5
+
+echo "==================================================================="
+echo "[INFO] SniDust started => Using $EXTERNAL_IP - Point your DNS settings to this address"
+echo "==================================================================="
+wait $nginx_processId

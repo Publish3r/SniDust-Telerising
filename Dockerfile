@@ -18,14 +18,15 @@ ENV DNSDIST_RATE_LIMIT_BLOCK_DURATION=360
 ENV DNSDIST_RATE_LIMIT_EVAL_WINDOW=60
 ENV SPOOF_ALL_DOMAINS=false
 ENV DNYDNS_CRON_SCHEDULE="*/2 * * * *"
+ENV INSTALL_DEFAULT_DOMAINS=true
 
 # HEALTHCHECKS
-HEALTHCHECK --interval=30s --timeout=3s CMD (pgrep "dnsdist" > /dev/null && pgrep "sniproxy" > /dev/null) || exit 1
+HEALTHCHECK --interval=30s --timeout=3s CMD (pgrep "dnsdist" > /dev/null && pgrep "nginx" > /dev/null) || exit 1
 
 # Expose Ports
 EXPOSE 5300/udp
-EXPOSE 80/tcp
-EXPOSE 443/tcp
+EXPOSE 8080/tcp
+EXPOSE 8443/tcp
 EXPOSE 8083/tcp
 
 RUN echo "I'm building for $TARGETPLATFORM"
@@ -33,38 +34,34 @@ RUN echo "I'm building for $TARGETPLATFORM"
 # Update Base
 RUN apk update && apk upgrade
 
+# Create Users
+RUN addgroup snidust && adduser -D -H -G snidust snidust
+
 # Install needed packages and clean up
-RUN apk add --no-cache tini dnsdist curl bash gnupg procps ca-certificates openssl dog lua5.4-filesystem ipcalc libcap && rm -rf /var/cache/apk/*
+RUN apk add --no-cache tini dnsdist curl bash gnupg procps ca-certificates openssl dog lua5.4-filesystem ipcalc libcap nginx nginx-mod-stream supercronic && rm -rf /var/cache/apk/*
 
 # Setup Folder(s)
 RUN mkdir -p /etc/dnsdist/conf.d && \
-    mkdir -p /etc/snidust/ && \
-    mkdir -p /etc/sniproxy/
-
-# Download and install sniproxy
-RUN ARCH=$(case ${TARGETPLATFORM:-linux/amd64} in \
-    "linux/amd64")   echo "amd64"  ;; \
-    "linux/arm/v7")  echo "arm"   ;; \
-    "linux/arm64")   echo "arm64" ;; \
-    *)               echo ""        ;; esac) \
-  && echo "ARCH=$ARCH" \
-  && curl -sSL https://github.com/mosajjal/sniproxy/releases/download/v2.0.4/sniproxy-v2.0.4-linux-${ARCH}.tar.gz | tar xvz \
-  && chmod +x sniproxy && install sniproxy /usr/local/bin && setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/sniproxy && rm sniproxy
+    mkdir -p /etc/snidust/domains.d && \
+    mkdir -p /etc/sniproxy/ && \
+    mkdir -p /var/lib/snidust/domains.d
 
 # Copy Files
 COPY configs/dnsdist/dnsdist.conf.template /etc/dnsdist/dnsdist.conf.template
 COPY configs/dnsdist/conf.d/00-SniDust.conf /etc/dnsdist/conf.d/00-SniDust.conf
-COPY domains.d /etc/snidust/domains.d
-COPY configs/sniproxy/config.yaml /etc/sniproxy/config.yaml
+COPY configs/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY domains.d /var/lib/snidust/domains.d
 
 COPY entrypoint.sh /entrypoint.sh
 COPY generateACL.sh /generateACL.sh
 COPY dynDNSCron.sh /dynDNSCron.sh
 
-RUN addgroup snidust && adduser -D -H -G snidust snidust
-
 RUN chown -R snidust:snidust /etc/dnsdist/ && \
-    chown -R snidust:snidust /etc/sniproxy/ && \
+    chown -R snidust:snidust /etc/snidust/ && \
+    chown -R snidust:snidust /etc/nginx/ && \
+    chown -R snidust:snidust /var/log/nginx/ && \
+    chown -R snidust:snidust /var/lib/nginx/ && \
+    chown -R snidust:snidust /run/nginx/ && \
     chmod +x /entrypoint.sh && \
     chmod +x /generateACL.sh && \
     chmod +x dynDNSCron.sh
