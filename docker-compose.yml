@@ -1,6 +1,5 @@
-version: '3.8'
 services:
-    seji64:
+    sniDust:
         container_name: sniDust
         environment:
             - 'ALLOWED_CLIENTS=127.0.0.1/32, myDynDNSDomain.no-ip.com' # CHANGE THIS
@@ -12,4 +11,4 @@ services:
             - '53:5300/udp'
             - '53:5300/tcp'
         image: 'ghcr.io/publish3r/snidust-telerising:main'
-        restart: always
+        restart: unless-stopped
