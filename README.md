@@ -230,6 +230,33 @@ You should see in the logs (`docker logs snidust`) snidust has reloaded your dom
 [SniDust] Domain Lists reloaded!
 ```
 
+## Configuration & Environment Variables
+
+### Core Settings
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `ALLOWED_CLIENTS` | `127.0.0.1` | Comma-separated list of allowed IPs or DynDNS domains. |
+| `ALLOWED_CLIENTS_FILE` | *(empty)* | Path to a file containing the ACL (allows reloading without restart). |
+| `EXTERNAL_IP` | *(empty)* | The public IP of the server to be used for spoofing. |
+| `SPOOF_ALL_DOMAINS` | `false` | If `true`, all DNS queries are spoofed regardless of the domain list. |
+| `INSTALL_DEFAULT_DOMAINS` | `true` | Whether to install the default domain lists provided by the repo. |
+| `DYNDNS_CRON_SCHEDULE` | `*/15 * * * *` | Schedule for DynDNS updates. |
+
+### DNSDist Performance & Security
+| Variable | Default | Description |
+| :--- | :--- | :--- |
+| `DNSDIST_RATE_LIMIT_DISABLE` | `false` | Set to `true` to disable rate limiting. |
+| `DNSDIST_RATE_LIMIT_WARN` | `800` | Warning threshold in queries per second (qps). |
+| `DNSDIST_RATE_LIMIT_BLOCK` | `1000` | Blocking threshold in qps. |
+| `DNSDIST_RATE_LIMIT_BLOCK_DURATION` | `360` | Duration (seconds) for which a client is blocked. |
+| `DNSDIST_RATE_LIMIT_EVAL_WINDOW` | `60` | Evaluation window in seconds. |
+| `DNSDIST_PACKAGE_CACHE_ENABLED` | `false` | Enables packet caching to reduce latency. |
+| `DNSDIST_PACKAGE_CACHE_SIZE` | `50000` | Maximum number of entries in the packet cache. |
+| `DNSDIST_UPSTREAM_POOL_NAME` | `upstream` | Name of the upstream pool. Change this if using a custom pool. |
+| `DNSDIST_UPSTREAM_CHECK_INTERVAL` | `10` | Interval (seconds) for checking upstream server health. |
+
+---
+
 ## Requirements
 
 * [Telerising API](https://github.com/sunsettrack4/telerising-api) (Server: zh2-).
