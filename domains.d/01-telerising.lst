@@ -15,6 +15,7 @@ zattoo-staging.zattoo.com
 www.teleboy.ch
 tv.api.teleboy.ch
 api.production.k8s.y3o.tv
+api-ng.production.k8s.y3o.tv
 ms.yallo.ch
 prod.ms.api.yallo.ch
 yallo-production.auth.eu-west-1.amazoncognito.com
