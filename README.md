@@ -27,7 +27,7 @@ For this **example** lets assume your public ip (of your *server*) is `10.111.12
 ### Run SniDust on your Server
 
 ```
-docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp --restart=always ghcr.io/publish3r/snidust-telerising:main
+docker run -d --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7, myDynDNSDomain.no-ip.com" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp --restart=always ghcr.io/publish3r/snidust-telerising:latest
 
 ```
 
@@ -48,7 +48,7 @@ services:
             - 443:8443
             - 80:8080
             - 53:5300/udp
-        image: 'ghcr.io/publish3r/snidust-telerising:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:latest'
 ```
 
 ### Check logs of the container
@@ -137,7 +137,7 @@ Create a file with the name `99-custom.lst`. Insert all your custom domains in t
 #### Mount it
 
 ```bash
-docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro --restart=always ghcr.io/publish3r/snidust-telerising:main
+docker run --name snidust -e ALLOWED_CLIENTS="127.0.0.1, 10.111.123.7" -e EXTERNAL_IP=10.111.123.8 -p 443:8443 -p 80:8080 -p 53:5300/udp -v ~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro --restart=always ghcr.io/publish3r/snidust-telerising:latest
 
 ```
 
@@ -157,7 +157,7 @@ services:
             - '53:5300/udp'
         volumes:
             - '~/99-custom.lst:/etc/snidust/domains.d/99-custom.lst:ro'
-        image: 'ghcr.io/publish3r/snidust-telerising:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:latest'
 ```
 
 ### Spoof all domains
@@ -195,7 +195,7 @@ services:
             - '53:5300/udp'
         volumes:
             - '~/myacls.acl:/tmp/myacls.acl:ro'
-        image: 'ghcr.io/publish3r/snidust-telerising:main'
+        image: 'ghcr.io/publish3r/snidust-telerising:latest'
 ```
 
 Then you can reload your ACLs by querying a specific DNS name:
