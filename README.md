@@ -1,3 +1,6 @@
+[![Docker](https://github.com/Publish3r/SniDust-Telerising/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/Publish3r/SniDust-Telerising/actions/workflows/docker-publish.yml)
+[![Website](https://img.shields.io/badge/Website-publish3r.github.io-2dd4bf?style=flat&logo=githubpages&logoColor=white)](https://publish3r.github.io/SniDust-Telerising/)
+
 # SniDust-Telerising
 SmartDNS Proxy for Telerising
 
