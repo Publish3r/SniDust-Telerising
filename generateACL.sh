@@ -1,4 +1,4 @@
-##!/bin/bash
+#!/bin/bash
 CLIENTS=()
 export DYNDNS_CRON_ENABLED=false
 
@@ -45,7 +45,7 @@ printf '%s\n' "${CLIENTS[@]}" > /etc/dnsdist/allowedClients.acl
 
 if [ -f "/etc/dnsdist/allowedClients.acl" ];
 then
-  echo "" > etc/nginx/allowedClients.conf
+  echo "" > /etc/nginx/allowedClients.conf
   while read -r line
   do
     echo "allow $line;" >> /etc/nginx/allowedClients.conf
