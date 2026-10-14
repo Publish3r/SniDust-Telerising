@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SniDust — SmartDNS proxy to hide your geo-location</title>
-<meta name="description" content="SniDust proxies DNS over UDP, DoH and DoT with DnsDist and Nginx and spoofs your origin IP, so geo-restricted services like Zattoo, Netflix or SRF think you are on the server.">
+<title>SniDust Telerising — SmartDNS proxy to hide your geo-location</title>
+<meta name="description" content="SniDust proxies DNS over UDP, DoH and DoT with DnsDist and Nginx and spoofs your origin IP, so geo-restricted services like Zattoo, Teleboy, Yallo, Sky Switzerland, Blue TV think you are on the server.">
 <meta name="theme-color" content="#0b0f14">
 <link rel="icon" href="favicon.svg" type="image/svg+xml" sizes="any">
 <link rel="canonical" href="https://publish3r.github.io/SniDust-Telerising/">
@@ -159,7 +159,7 @@
   <p class="kicker">DnsDist · Nginx · DoH · DoT · UDP</p>
   <h1>SmartDNS proxy to hide your geo-location</h1>
   <p class="muted">SniDust proxies your DNS requests and <strong>spoofs your origin IP</strong>, so geo-restricted
-  services (Zattoo, Netflix, SRF.ch, Yallo, Hulu, Amazon Prime, …) see the IP of your server instead of yours.</p>
+  services (Zattoo, Teleboy, Yallo, Sky Switzerland, Blue TV,…) see the IP of your server instead of yours.</p>
   <div class="btns">
     <a class="btn" href="#quickstart">▸ Quick start</a>
     <a class="btn" href="https://github.com/Publish3r/SniDust-Telerising">★ GitHub</a>
@@ -170,7 +170,7 @@
 <section id="how">
   <h2>How it works</h2>
   <div class="fig">
-  <svg viewBox="0 0 820 380" role="img" aria-label="Sequence diagram: the client asks the SniDust server for hulu.com; the server answers with its own IP, so the client sends the video request to the server; the server proxies that request to the geo-correct CDN edge and streams the response back to the client.">
+  <svg viewBox="0 0 820 380" role="img" aria-label="Sequence diagram: the client asks the SniDust server for zattoo.com; the server answers with its own IP, so the client sends the video request to the server; the server proxies that request to the geo-correct CDN edge and streams the response back to the client.">
     <defs>
       <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
         <path d="M0,0 L10,5 L0,10 z" fill="#38bdf8"/>
@@ -197,11 +197,11 @@
       <path d="M400 88 L400 352" fill="none" stroke="#1e2a33" stroke-dasharray="3 4"/>
       <path d="M690 78 L690 352" fill="none" stroke="#1e2a33" stroke-dasharray="3 4"/>
       <path d="M124 106 L396 106" fill="none" stroke="#38bdf8" stroke-width="1.6" marker-end="url(#ar)"/>
-      <text x="260" y="96" font-size="11" text-anchor="middle" fill="#8fa1ad">1  DNS question: hulu.com</text>
+      <text x="260" y="96" font-size="11" text-anchor="middle" fill="#8fa1ad">1  DNS question: zattoo.com</text>
       <path d="M396 142 L124 142" fill="none" stroke="#2dd4bf" stroke-width="1.8" marker-end="url(#arw)"/>
-      <text x="260" y="132" font-size="11" text-anchor="middle" fill="#2dd4bf">2  answer: hulu.com ⇒ 10.111.123.8</text>
+      <text x="260" y="132" font-size="11" text-anchor="middle" fill="#2dd4bf">2  answer: zattoo.com ⇒ 10.111.123.8</text>
       <path d="M124 182 L396 182" fill="none" stroke="#38bdf8" stroke-width="1.6" marker-end="url(#ar)"/>
-      <text x="260" y="172" font-size="11" text-anchor="middle" fill="#8fa1ad">3  HTTPS request to hulu.com</text>
+      <text x="260" y="172" font-size="11" text-anchor="middle" fill="#8fa1ad">3  HTTPS request to zattoo.com</text>
       <path d="M404 222 L686 222" fill="none" stroke="#f0b42f" stroke-width="1.6" marker-end="url(#arh)"/>
       <text x="545" y="212" font-size="11" text-anchor="middle" fill="#f0b42f">4  proxied on to the edge IP</text>
       <path d="M686 262 L404 262" fill="none" stroke="#f0b42f" stroke-width="1.6" marker-end="url(#arh)"/>
@@ -213,9 +213,9 @@
   </div>
   <div class="figsteps">
   <ol class="flow">
-    <li><code>10.111.123.7 → 10.111.123.8</code><span>DNS question for hulu.com</span></li>
-    <li><code>10.111.123.8 → 10.111.123.7</code><span>answer: hulu.com ⇒ 10.111.123.8</span></li>
-    <li><code>10.111.123.7 → 10.111.123.8</code><span>HTTPS request to hulu.com</span></li>
+    <li><code>10.111.123.7 → 10.111.123.8</code><span>DNS question for zattoo.com</span></li>
+    <li><code>10.111.123.8 → 10.111.123.7</code><span>answer: zattoo.com ⇒ 10.111.123.8</span></li>
+    <li><code>10.111.123.7 → 10.111.123.8</code><span>HTTPS request to zattoo.com</span></li>
     <li><code>10.111.123.8 → 104.98.130.197</code><span>proxied request to the CDN edge</span></li>
     <li><code>104.98.130.197 → 10.111.123.8</code><span>video stream back</span></li>
     <li><code>10.111.123.8 → 10.111.123.7</code><span>stream on to the client</span></li>
@@ -230,7 +230,7 @@
       <code>/etc/snidust/domains.d</code> (55 entries) are tagged; everything else is passed through untouched.</p></div>
     <div class="card"><h4>3 · Spoofed answer</h4><p>Tagged queries never reach the real CDN.
       <code>SpoofAction(EXTERNAL_IP)</code> rewrites the record itself, so the client is told that
-      <code>hulu.com</code> resolves to the server — and opens its video connection there.</p></div>
+      <code>zattoo.com</code> resolves to the server — and opens its video connection there.</p></div>
     <div class="card"><h4>4 · Reverse proxy</h4><p>nginx proxies that connection to the real host
       (<code>proxy_pass http://$host$request_uri</code>), resolving the name from the server's own
       view — the geo-correct CDN edge. The stream is piped back to the client.</p></div>
@@ -241,32 +241,18 @@
   <h2>Supported services</h2>
   <p class="muted">Optimised for these services; the shipped lists cover their CDN and API domains.</p>
   <div class="svc">
-    <div class="card"><h4>Zattoo</h4><p>ch + wemfbox + akamai variants</p></div>
-    <div class="card"><h4>Netflix</h4><p>nflx* + netflix.de</p></div>
-    <div class="card"><h4>SRF / RTS</h4><p>srgssr.ch, cdn.rts.ch</p></div>
-    <div class="card"><h4>Yallo</h4><p>yallo.tv, zahs.tv</p></div>
-    <div class="card"><h4>Hulu</h4><p>hulu.com, huluim.com</p></div>
-    <div class="card"><h4>Amazon Prime</h4><p>amazonvideo.com, amazon.co.uk</p></div>
-    <div class="card"><h4>HBO</h4><p>hbogo.com, hbonow.com</p></div>
-    <div class="card"><h4>Molotov TV</h4><p>molotov.tv, y3o.tv</p></div>
-    <div class="card"><h4>YouTube</h4><p>youtubei, googlevideo, youtu.be</p></div>
-    <div class="card"><h4>Akamai CDN</h4><p>10 akamai domains</p></div>
+    <div class="card"><h4>Zattoo</h4></div>
+    <div class="card"><h4>Teleboy</h4></div>
+    <div class="card"><h4>Yallo</h4></div>
+    <div class="card"><h4>Sky CH</h4></div>
+    <div class="card"><h4>Blue TV</h4></div>
+	    <div class="card"><h4>...</h4></div>
   </div>
   <div class="scroll"><table class="tbl">
-    <thead><tr><th>Blocklist file</th><th>Entries</th></tr></thead>
+    <thead><tr><th>Blocklist file</th></tr></thead>
     <tbody>
-      <tr><td><code>00-debug.lst</code></td><td>1</td></tr>
-      <tr><td><code>01-cdn_akamai.lst</code></td><td>11</td></tr>
-      <tr><td><code>02-amazon.lst</code></td><td>3</td></tr>
-      <tr><td><code>03-hbo.lst</code></td><td>3</td></tr>
-      <tr><td><code>04-hulu.lst</code></td><td>2</td></tr>
-      <tr><td><code>05-netflix.lst</code></td><td>11</td></tr>
-      <tr><td><code>06-molotov_tv.lst</code></td><td>2</td></tr>
-      <tr><td><code>07-srf_ch.lst</code></td><td>4</td></tr>
-      <tr><td><code>09-zattoo.lst</code></td><td>9</td></tr>
-      <tr><td><code>10-yallo.lst</code></td><td>2</td></tr>
-      <tr><td><code>11-youtube.lst</code></td><td>7</td></tr>
-      <tr><td><strong>Total</strong></td><td><strong>55</strong></td></tr>
+      <tr><td><code>00-debug.lst</code></td></</tr>
+      <tr><td><code>01-telerising.lst</code></td><t</tr>
     </tbody>
   </table></div>
 </section>
@@ -399,8 +385,9 @@ dig @10.111.123.8 reload.certs.snidust.local       # re-read the DoT certificate
   <a href="https://github.com/andykimpe/wilmaa-proxy">wilmaa-proxy</a>,
   <a href="https://github.com/suuhm/unblock-proxy.sh">unblock-proxy.sh</a> and
   <a href="https://github.com/ab77/netflix-proxy">netflix-proxy</a>.</p>
-  <p class="pill">Source: <a href="https://github.com/Publish3r/SniDust-Telerising">github.com/Seji64/SniDust</a> ·
+  <p class="pill">Source: <a href="https://github.com/Publish3r/SniDust-Telerising">github.com/Publish3r/SniDust-Telerising</a> ·
   Image: <a href="https://ghcr.io/publish3r/snidust-telerising">ghcr.io/publish3r/snidust-telerising:latest</a></p>
+  <p class="pill">Forked from: <a href="https://github.com/Seji64/SniDust">github.com/Seji64/SniDust</a></p> 
 </section>
 
 </div>
