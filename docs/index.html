@@ -226,8 +226,8 @@
     <div class="card"><h4>1 · Access control</h4><p>Only clients on the ACL may use the proxy. IPs and DynDNS
       domains from <code>ALLOWED_CLIENTS</code> are resolved to IPs and written to
       <code>/etc/dnsdist/allowedClients.acl</code>; a cron re-resolves DynDNS names every 15 min.</p></div>
-    <div class="card"><h4>2 · Blocklist match</h4><p>Queries whose suffix matches one of the 11 lists in
-      <code>/etc/snidust/domains.d</code> (55 entries) are tagged; everything else is passed through untouched.</p></div>
+    <div class="card"><h4>2 · Blocklist match</h4><p>Queries whose suffix matches one of the lists in
+      <code>/etc/snidust/domains.d</code> are tagged; everything else is passed through untouched.</p></div>
     <div class="card"><h4>3 · Spoofed answer</h4><p>Tagged queries never reach the real CDN.
       <code>SpoofAction(EXTERNAL_IP)</code> rewrites the record itself, so the client is told that
       <code>zattoo.com</code> resolves to the server — and opens its video connection there.</p></div>
